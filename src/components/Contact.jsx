@@ -1,7 +1,9 @@
+import React, { useRef } from 'react';
 import styled from "styled-components"
 import Map from "../img/mapok.png"
 import Phone from "../img/phoneok.png"
 import Send from "../img/sendok.png"
+import emailjs from 'emailjs-com';
 
 const Container = styled.div`
   height: 90%;
@@ -136,24 +138,37 @@ const Text = styled.span`
 `;
 
 const Contact = () => {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm('service_mtp4znu', 'template_1ic0a2b', form.current, 'user_r6K1j95WsgS5KesJHUScn')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+      e.target.reset()
+  };
+  
     return ( 
         <Container>
             <Wrapper>
                 <FormContainer>
-                    <Title>Questions? <br/>Let`s Get In Touch</Title>
-                <Form>
+                    <Title>Questions? <br/>Let`s Get In Touch</Title>                    
+                <Form ref={form} onSubmit={sendEmail}>
                         <LeftForm>
-                            <Input placeholder="your name"></Input>
-                            <Input placeholder="your Email"></Input>
-                            <Input placeholder="Subject"></Input>
+                            <Input type="text" name="name" placeholder="your name"></Input>
+                            <Input type ="email"name="email"placeholder="your Email"></Input>
+                            <Input type="text" name="subject" placeholder="Subject"></Input>
                         </LeftForm>
                         <RightForm>
-                            <TextArea placeholder="your message"></TextArea>
+                            <TextArea name="message"placeholder="your message"></TextArea>
                             <Button>Send</Button>
                         </RightForm>
                     </Form>                
                 </FormContainer>
-
                 <AddressContainer>
                     <AddressItem>
                         <Icon src={Map}/>
